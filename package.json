@@ -1,5 +1,5 @@
 {
-  "name": "leaflet_list",
+  "name": "ga_project_2021",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -21,9 +21,8 @@
   "scripts": {
     "start": "webpack serve --open --config webpack.config.js",
     "start-old": "webpack --mode=development",
-    "build": "webpack",
-    "build-prod": "webpack --config webpack.prod.js",
-    "dev-server": "webpack-dev-server"
+    "build": "webpack --env=mode=development",
+    "dev-server": "webpack serve --env=mode=development"
   },
   "eslintConfig": {
     "extends": [
