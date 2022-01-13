@@ -1,3 +1,27 @@
+html,
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+section {
+    width: 100vw;
+    height: calc(100vh - 22vh);
+}
+
+.header, .footer {
+    height: 11vh;
+}
+
 .title {
     font-size: 1.5vw;
+}
+
+.title-ellpisis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }

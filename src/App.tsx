@@ -1,14 +1,21 @@
 import React from 'react';
-import './App.scss';
+
 import Header from './components/header/Header';
+import Table from './components/table/Table';
+import Footer from './components/footer/Footer';
+
+
+import './App.scss';
+
 
 function App() {
   return (
     <div className="App">
-      <Header />
+      <Header title='Manage Employees'/>
       <section>
-        
+        <Table className='table-striped table-bordered'/>
       </section>
+      <Footer/>
     </div>
   );
 }
