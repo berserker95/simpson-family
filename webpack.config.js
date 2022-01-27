@@ -25,14 +25,7 @@ module.exports = env => {
                     use: "babel-loader",
                     exclude: /node_modules/,
                 },
-                {
-                    test: /\.(png|jpe?g|gif|svg)$/i,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                        },
-                    ],
-                },
+            
                 {
                     // Some change here
                     test: /\.(s)?[ac]ss$/i,
@@ -47,13 +40,17 @@ module.exports = env => {
                 }
             ],
         },
-        devtool: false,
+        devtool: 'inline-source-map',
         devServer: {
-            static: {
-                directory: path.join(__dirname, 'public'),
-            },
+            https: false,
+            historyApiFallback: true,
+           static: {
+            directory: path.join(__dirname, 'public'),
+           },
             compress: true,
-            port: 9000
+            port: 9000,
+            hot: true,
+            host: '0.0.0.0'
         },
     }
 }

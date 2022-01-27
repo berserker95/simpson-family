@@ -1,0 +1,49 @@
+.header {
+    height: auto !important;
+    background-color: var(--white);
+    .profile-img {
+        width: 180px;
+        height: 180px;
+        background-image: url("../../../public/images/assets/me.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    .profile-content {
+        margin-top: 22px;
+        .name {
+            margin: 9px 0 8px 20px;
+            color: var(--tuna);
+        }
+        .role {
+            margin: 0px 0 12px 26px;
+            color: var(--light-slate-grey);
+            font-family: "Lato", arial, sans-serif;
+        }
+
+        .social {
+            margin-left: 28px;
+            li a {
+                width: 36px;
+                height: 36px;
+                background: var(--tide);
+                color: var(--white);
+            }
+
+            li:not(:last-child) {
+                margin-right: 12px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .header {
+        .profile-container {
+            justify-content: center;
+            .profile-content {
+                margin-top: 10px;
+            }
+        }
+    }
+}
