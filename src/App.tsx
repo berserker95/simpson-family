@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from 'react-router-dom';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 import Header from './components/header/Header';
 
@@ -11,20 +8,22 @@ import './fontawesome';
 
 import './App.scss';
 
+AOS.init(
+  { duration: 1000,
+    easing: 'ease-in-out',
+    once: true,
+    mirror: false
+  }
+);
 
 function App() {
   return (
-    <Router>
-      <Header headerClass='header'/>
-      <div className='body-container w-100 h-100'>
-        <Routes>
-          <Route path='/' element={() => { }} />
-          <Route path='/about' element={() => { }} />
-          <Route path='/curriculum' element={() => { }} />
-          <Route path='/contact' element={() => { }} />
-        </Routes>
-      </div>
-    </Router>
+  <div className='wrapper-container'>
+    <React.Fragment>
+      <Header id='headerId' headerClass='wrapper-header'/>
+    </React.Fragment>
+  </div>
+         
   );
 }
 

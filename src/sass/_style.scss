@@ -1,22 +1,9 @@
 html,
 body {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
 
-section {
-    width: 100vw;
-    height: calc(100vh - 22vh);
-}
-
-.header, .footer {
-    height: 11vh;
-}
-
-.title {
-    font-size: 1.5vw;
-}
 
 .title-ellpisis {
     overflow: hidden;
