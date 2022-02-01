@@ -1,26 +1,22 @@
 import React from 'react';
-import AOS from "aos";
-import "aos/dist/aos.css";
 
-import Header from './components/header/Header';
+import Navbar from './components/navbar/Navbar';
+import Main from './components/main/Main';
+import Footer from './components/footer/Footer';
 
 import './fontawesome';
 
 import './App.scss';
 
-AOS.init(
-  { duration: 1000,
-    easing: 'ease-in-out',
-    once: true,
-    mirror: false
-  }
-);
+
 
 function App() {
   return (
   <div className='wrapper-container'>
     <React.Fragment>
-      <Header id='headerId' headerClass='wrapper-header'/>
+      <Navbar id='navbarId' navbarClass='wrapper-navbar'/>
+      <Main id='mainId' mainClass='wrapper-main'/>
+      <Footer id='footerId' footerClass='wrapper-footer'/>
     </React.Fragment>
   </div>
          
