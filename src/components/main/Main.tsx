@@ -183,13 +183,13 @@ const Main = (props: MainProps) => {
                     open={openModal}
                     TransitionComponent={Transition}
                     keepMounted
-                    maxWidth='xs'
+                    maxWidth='md'
                 >
                     {renderDialogHeader()}
                     <DialogContent>
                         <form onSubmit={formik.handleSubmit}>
-                            <Grid container className="form-container">
-                                <Grid item sm={12} xs={12}>
+                            <Grid container className="form-container" spacing={1}>
+                                <Grid item sm={12} xs={12} md={6}>
                                     <TextField id="firstname"
                                         label="Firstname"
                                         variant="outlined"
@@ -199,7 +199,7 @@ const Main = (props: MainProps) => {
                                         {...formik.getFieldProps('firstname')}
                                     />
                                 </Grid>
-                                <Grid item sm={12} xs={12}>
+                                <Grid item sm={12} xs={12} md={6}>
                                     <TextField id="lastname"
                                         label="Lastname"
                                         variant="outlined"
@@ -209,7 +209,7 @@ const Main = (props: MainProps) => {
                                         {...formik.getFieldProps('lastname')}
                                     />
                                 </Grid>
-                                <Grid item sm={12} xs={12}>
+                                <Grid item sm={12} xs={12} md={6}>
                                     <TextField id="email"
                                         label="Email"
                                         variant="outlined"
@@ -219,7 +219,7 @@ const Main = (props: MainProps) => {
                                         {...formik.getFieldProps('email')}
                                     />
                                 </Grid>
-                                <Grid item sm={12} xs={12}>
+                                <Grid item sm={12} xs={12} md={6}>
                                     <LocalizationProvider dateAdapter={AdapterDateFns} locale={localeDate.locale}>
                                         <DatePicker
                                             label="Date of birth"
@@ -232,7 +232,7 @@ const Main = (props: MainProps) => {
 
                                     </LocalizationProvider>
                                 </Grid>
-                                <Grid item sm={12} xs={12}>
+                                <Grid item sm={12} xs={12} md={6}>
                                     <TextField
                                         id="gender"
                                         label="Gender"
