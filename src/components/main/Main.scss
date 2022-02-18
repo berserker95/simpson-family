@@ -26,3 +26,10 @@
 .css-1rwt2y5-MuiButtonBase-root-MuiButton-root {
     background-color: var(--white) !important;
 }
+
+
+.no-data-image {
+    background: url('/public/images/assets/Bart.jpg') center / contain no-repeat;
+    width: 22vw;
+    height: 34vh;
+}
