@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
     Dialog,
@@ -9,10 +10,19 @@ import {
     TextField,
     MenuItem,
     Slide,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
     Fab,
     Button,
-    IconButton
+    IconButton,
+    CircularProgress
 } from "@mui/material";
+
 
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
@@ -25,26 +35,21 @@ import DatePicker from '@mui/lab/DatePicker';
 
 import { TransitionProps } from '@mui/material/transitions';
 
+import { Simpson, Gender } from "../../types";
+
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
+import { RootState } from "../../store";
 
 import './Main.scss';
+import { addMembers } from "../../slices/addMembesrSlice";
 
 
-
-interface Simpson {
-    firstname: string,
-    lastname: string,
-    email: string,
-    birthdate: Date | null,
-    gender: string
-}
 interface MainProps {
     mainClass?: string,
     id?: string
 }
-
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -59,27 +64,34 @@ const Transition = React.forwardRef(function Transition(
 const Main = (props: MainProps) => {
 
     const firstTitleCard: string = 'Simpson family members:';
-    const secondTitleCard: string = 'Total members';
+    const secondTitleCard: string = 'Total members:';
 
     const initialFormState: Simpson = {
         firstname: '',
         lastname: '',
         email: '',
         birthdate: new Date(),
-        gender: ''
+        gender: Gender.M
     };
 
-    const [familyMembers, setFamilyMembers] = useState<number>(0);
-    const [members, setMembers] = useState<number>(0);
-    const [date, setDate] = useState<Date | null>(initialFormState.birthdate);
+    const addedMembersStored: Simpson[] = useSelector((state: RootState) => state.addMembers.members);
+    const dispatch = useDispatch();
+
+    const [familyMembers, setFamilyMembers] = useState<number>(addedMembersStored.length);
+    const [members, setMembers] = useState<number>(addedMembersStored.length);
     const [localeDate, setLocaleDate] = useState<{ locale: Locale, mask: string }>({ locale: itLocale, mask: '__/__/____' })
     const [openModal, setOpenModal] = useState<boolean>(false);
-
+    const [loading, setLoading] = useState<boolean>(false);
 
 
     useEffect(() => {
 
     }, [openModal])
+
+    useEffect(() => {
+        setMembers(addedMembersStored.length);
+        setFamilyMembers(addedMembersStored.length * 20)
+    }, [addedMembersStored])
 
 
     function handleOpenModal(): void {
@@ -87,9 +99,14 @@ const Main = (props: MainProps) => {
     };
 
     function handleCloseModal(): void {
+        setLoading(false);
         setOpenModal(false);
         formik.resetForm();
     };
+
+    function getStringedDate(date: Date): string {
+        return date.toLocaleString().split(',')[0];
+    }
 
 
     const formik = useFormik({
@@ -98,17 +115,27 @@ const Main = (props: MainProps) => {
             lastname: '',
             email: '',
             birthdate: new Date(),
-            gender: ''
+            gender: Gender.M
         },
         validationSchema: Yup.object({
             firstname: Yup.string().required('Please enter your name'),
             lastname: Yup.string().required('Please enter your lastname'),
             email: Yup.string().email('Please enter your email address in format: yourname@example.com').required('Please enter your email'),
             birthdate: Yup.date(),
-            gender: Yup.string().required('Please enter your gender'),
+            gender: Yup.mixed<Gender>().required('Please enter your gender').oneOf(Object.values(Gender)),
         }),
         onSubmit: values => {
-            console.log('Form data', values);
+            setLoading(true);
+
+            async function formResultDelay() {
+                await new Promise((resolve) => {
+                    setTimeout(() => resolve(dispatch(addMembers(values))), 3000);
+                })
+                setLoading(false);
+                handleCloseModal();
+            }
+
+            formResultDelay();
         },
     });
 
@@ -119,9 +146,9 @@ const Main = (props: MainProps) => {
             <div className="col-sm-6">
                 <div className="card mb-2">
                     <div className="card-body">
-                        <h4>{firstTitleCard} {familyMembers}</h4>
+                        <h4>{firstTitleCard}</h4>
                         <div className="progress mb-2">
-                            <div id="progressBar" className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style={{ width: '25%' }} aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}>25%</div>
+                            <div id="progressBar" className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style={{ width: `${familyMembers}%` }} aria-valuenow={familyMembers} aria-valuemin={0} aria-valuemax={100}>{familyMembers}%</div>
                         </div>
                     </div>
                 </div>
@@ -143,6 +170,52 @@ const Main = (props: MainProps) => {
         );
     }
 
+    function renderSimpsonFamily(): JSX.Element {
+        return (
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="familyMemberTable">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="left">Firstname</TableCell>
+                            <TableCell align="left">Lastname</TableCell>
+                            <TableCell align="left">Email</TableCell>
+                            <TableCell align="right">Birthdate</TableCell>
+                            <TableCell align="center">Gender</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {addedMembersStored.map((member: Simpson, index: number) => {
+                            return (
+                                <React.Fragment>
+                                    <TableRow key={index}>
+                                        <TableCell align="left">{member.firstname}</TableCell>
+                                        <TableCell align="left">{member.lastname}</TableCell>
+                                        <TableCell align="left">{member.email}</TableCell>
+                                        <TableCell align="right">{getStringedDate(member.birthdate)}</TableCell>
+                                        <TableCell align="center">{member.gender}</TableCell>
+                                    </TableRow>
+                                </React.Fragment>
+                            )
+                        })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    }
+
+    function renderNoDataFound(): JSX.Element {
+        return (
+            <div className="col-sm-12 d-flex justify-content-center align-items-center">
+                <div className="no-data-description d-flex flex-column justify-content-center align-items-center">
+                    <h1>Ay, caramba!</h1>
+                    <span className="font-italic fs-18 mb-1">No data found.</span>
+                    <span className="fs-16">Please, add members to simpons's family.s</span>
+                </div>
+                <div className="no-data-image"></div>
+            </div>
+        );
+    }
+
 
     function renderMain(): JSX.Element {
         return (
@@ -151,13 +224,20 @@ const Main = (props: MainProps) => {
                     {renderLeftMainColumn()}
                     {renderRightMainColumn()}
                 </div>
+                <div className="row mt-48">
+                    {
+                        (addedMembersStored.length) ?
+                            renderSimpsonFamily() :
+                            renderNoDataFound()
+                    }
+                </div>
             </main>
         );
     }
 
     function renderFloatingButton(): JSX.Element {
         return (
-            <Fab color="primary" aria-label="add" className="new-button position-fixed" onClick={handleOpenModal}>
+            <Fab color="primary" aria-label="add" className="new-button position-fixed" disabled={familyMembers === 100} onClick={handleOpenModal}>
                 <AddIcon />
             </Fab>
         );
@@ -165,7 +245,7 @@ const Main = (props: MainProps) => {
 
     function renderDialogHeader(): JSX.Element {
         return (
-            <DialogTitle  className="d-flex align-items-center justify-content-between bg-light border-bottom" >
+            <DialogTitle className="d-flex align-items-center justify-content-between bg-light border-bottom" >
                 Member Registration
                 <IconButton onClick={handleCloseModal}>
                     <CloseIcon />
@@ -238,19 +318,19 @@ const Main = (props: MainProps) => {
                                         label="Gender"
                                         select
                                         fullWidth
-                                        error={ (formik.touched.gender && formik.errors.gender) ? Boolean(formik.errors.gender) : false}
+                                        error={(formik.touched.gender && formik.errors.gender) ? Boolean(formik.errors.gender) : false}
                                         helperText={(formik.touched.gender && formik.errors.gender) ? formik.errors.gender : null}
                                         {...formik.getFieldProps('gender')}
                                     >
-                                        <MenuItem value={0}>Male</MenuItem>
-                                        <MenuItem value={1}>Female</MenuItem>
-                                        <MenuItem value={2}>Other</MenuItem>
+                                        <MenuItem value={'Male'}>Male</MenuItem>
+                                        <MenuItem value={'Female'}>Female</MenuItem>
+                                        <MenuItem value={'Other'}>Other</MenuItem>
                                     </TextField>
                                 </Grid>
                             </Grid>
                             <DialogActions className="bg-light border-top p-3">
                                 <Button className="close-button" variant="outlined" onClick={handleCloseModal}>Cancel</Button>
-                                <Button type="submit" color="primary" variant="contained">Register</Button>
+                                <Button className={`${loading ? 'disabled-primary-button' : ''}`} type="submit" color="primary" variant="contained" startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}>Register</Button>
                             </DialogActions>
                         </form>
                     </DialogContent>
