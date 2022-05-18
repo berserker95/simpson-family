@@ -61,7 +61,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
+//TODO: Code refactoring (Types, localize labels)
 const Main = (props: MainProps) => {
 
     const firstTitleCard: string = 'Simpson family members:';
@@ -127,6 +127,7 @@ const Main = (props: MainProps) => {
     });
 
 
+    //TODO: Set the background color red to the progress-bar when the familyMembers array has a length equals to 5
 
     function renderLeftMainColumn(): JSX.Element {
         return (
@@ -166,8 +167,8 @@ const Main = (props: MainProps) => {
                             <TableCell align="left">Firstname</TableCell>
                             <TableCell align="left">Lastname</TableCell>
                             <TableCell align="left">Email</TableCell>
-                            <TableCell align="right">Birthdate</TableCell>
-                            <TableCell align="center">Gender</TableCell>
+                            <TableCell align="right" size="small">Birthdate</TableCell>
+                            <TableCell align="center" size="small">Gender</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -224,7 +225,7 @@ const Main = (props: MainProps) => {
 
     function renderFloatingButton(): JSX.Element {
         return (
-            <Fab color="primary" aria-label="add" className="new-button position-fixed" disabled={familyMembers === 100} onClick={handleOpenModal}>
+            <Fab color="primary" aria-label="add" className="new-button position-fixed" disabled={familyMembers === 5} onClick={handleOpenModal}>
                 <AddIcon />
             </Fab>
         );

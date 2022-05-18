@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Simpson } from '../types';
 
 interface addMemberState  {
-   members: Array<Simpson>,
+   members: Simpson[],
 }
 
 const initialState: addMemberState = {
