@@ -27,7 +27,6 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 
-import itLocale from "date-fns/locale/it";
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -36,14 +35,16 @@ import DatePicker from '@mui/lab/DatePicker';
 import { TransitionProps } from '@mui/material/transitions';
 
 import { Simpson, Gender } from "../../types";
+import { DATE_LOCALE } from "../../utils/mainUtils";
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { RootState } from "../../store";
+import { addMembers } from "../../slices/addMembesrSlice";
 
 import './Main.scss';
-import { addMembers } from "../../slices/addMembesrSlice";
+
 
 
 interface MainProps {
@@ -66,27 +67,13 @@ const Main = (props: MainProps) => {
     const firstTitleCard: string = 'Simpson family members:';
     const secondTitleCard: string = 'Total members:';
 
-    const initialFormState: Simpson = {
-        firstname: '',
-        lastname: '',
-        email: '',
-        birthdate: new Date(),
-        gender: Gender.M
-    };
-
     const addedMembersStored: Simpson[] = useSelector((state: RootState) => state.addMembers.members);
     const dispatch = useDispatch();
 
     const [familyMembers, setFamilyMembers] = useState<number>(addedMembersStored.length);
     const [members, setMembers] = useState<number>(addedMembersStored.length);
-    const [localeDate, setLocaleDate] = useState<{ locale: Locale, mask: string }>({ locale: itLocale, mask: '__/__/____' })
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-
-
-    useEffect(() => {
-
-    }, [openModal])
 
     useEffect(() => {
         setMembers(addedMembersStored.length);
@@ -190,8 +177,8 @@ const Main = (props: MainProps) => {
                                     <TableRow key={index}>
                                         <TableCell align="left">{member.firstname}</TableCell>
                                         <TableCell align="left">{member.lastname}</TableCell>
-                                        <TableCell align="left">{member.email}</TableCell>
-                                        <TableCell align="right">{getStringedDate(member.birthdate)}</TableCell>
+                                        <TableCell align="left" width={600}>{member.email}</TableCell>
+                                        <TableCell align="right" width={100}>{getStringedDate(member.birthdate)}</TableCell>
                                         <TableCell align="center">{member.gender}</TableCell>
                                     </TableRow>
                                 </React.Fragment>
@@ -300,10 +287,10 @@ const Main = (props: MainProps) => {
                                     />
                                 </Grid>
                                 <Grid item sm={12} xs={12} md={6}>
-                                    <LocalizationProvider dateAdapter={AdapterDateFns} locale={localeDate.locale}>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns} locale={DATE_LOCALE.locale}>
                                         <DatePicker
                                             label="Date of birth"
-                                            mask={localeDate.mask}
+                                            mask={DATE_LOCALE.mask}
                                             value={formik.values.birthdate}
                                             onChange={(date) => { formik.setFieldValue('birthdate', date) }}
                                             renderInput={(params) => <TextField id="birthdate" {...params} fullWidth />}
